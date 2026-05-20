@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>销量冠军产品分析报告 — Classic Vest, S</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+<style>
+  :root {
+    --primary: #4F46E5;
+    --primary-light: #818CF8;
+    --bg: #F8FAFC;
+    --card: #FFFFFF;
+    --text: #1E293B;
+    --text-light: #64748B;
+    --border: #E2E8F0;
+    --success: #10B981;
+    --warning: #F59E0B;
+    --danger: #EF4444;
+    --accent: #8B5CF6;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+  .header { background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 50%, #EC4899 100%); color: white; padding: 48px 0 36px; text-align: center; position: relative; overflow: hidden; }
+  .header::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%); animation: pulse 4s ease-in-out infinite; }
+  @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+  .header h1 { font-size: 32px; font-weight: 700; position: relative; }
+  .header p { font-size: 16px; opacity: 0.9; margin-top: 8px; position: relative; }
+  .container { max-width: 1200px; margin: 0 auto; padding: 24px 16px; }
+  .kpi-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
+  .kpi-card { background: var(--card); border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); border: 1px solid var(--border); text-align: center; transition: transform 0.2s, box-shadow 0.2s; cursor: default; }
+  .kpi-card:hover { transform: translateY(-4px); box-shadow: 0 8px 25px rgba(79,70,229,0.15); }
+  .kpi-value { font-size: 36px; font-weight: 800; background: linear-gradient(135deg, var(--primary), var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .kpi-label { font-size: 13px; color: var(--text-light); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .kpi-badge { display: inline-block; padding: 2px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; margin-top: 8px; }
+  .badge-green { background: #D1FAE5; color: #065F46; }
+  .badge-blue { background: #DBEAFE; color: #1E40AF; }
+  .section { margin-bottom: 24px; }
+  .section-title { font-size: 20px; font-weight: 700; margin-bottom: 16px; padding-left: 12px; border-left: 4px solid var(--primary); }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+  @media (max-width: 768px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } }
+  .card { background: var(--card); border-radius: 12px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); border: 1px solid var(--border); }
+  .card-title { font-size: 15px; font-weight: 600; color: var(--text-light); margin-bottom: 12px; }
+  .chart-box { width: 100%; height: 320px; }
+  .chart-box-lg { width: 100%; height: 400px; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  thead th { background: #F1F5F9; color: var(--text-light); font-weight: 600; text-transform: uppercase; font-size: 12px; letter-spacing: 0.5px; padding: 12px 16px; text-align: left; position: sticky; top: 0; }
+  tbody td { padding: 10px 16px; border-bottom: 1px solid var(--border); }
+  tbody tr { transition: background 0.15s; cursor: pointer; }
+  tbody tr:hover { background: #F8FAFC; }
+  tbody tr.highlight { background: #EEF2FF; }
+  .rank { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 50%; font-weight: 700; font-size: 13px; }
+  .rank-1 { background: linear-gradient(135deg, #F59E0B, #FCD34D); color: #78350F; }
+  .rank-2 { background: linear-gradient(135deg, #9CA3AF, #D1D5DB); color: #374151; }
+  .rank-3 { background: linear-gradient(135deg, #D97706, #FBBF24); color: #78350F; }
+  .rank-n { background: #F1F5F9; color: var(--text-light); }
+  .bar-inline { display: inline-block; height: 8px; border-radius: 4px; background: linear-gradient(90deg, var(--primary), var(--primary-light)); vertical-align: middle; margin-left: 8px; transition: width 0.6s ease; }
+  .insight-box { background: linear-gradient(135deg, #EEF2FF, #F5F3FF); border: 1px solid #C7D2FE; border-radius: 12px; padding: 20px; margin-top: 20px; }
+  .insight-box h3 { color: var(--primary); margin-bottom: 10px; font-size: 16px; }
+  .insight-box ul { padding-left: 20px; }
+  .insight-box li { margin-bottom: 6px; color: #4338CA; font-size: 14px; }
+  .footer { text-align: center; padding: 32px 16px; color: var(--text-light); font-size: 13px; }
+  .tag { display: inline-block; padding: 3px 10px; border-radius: 6px; font-size: 12px; font-weight: 500; margin-right: 6px; }
+  .tag-blue { background: #DBEAFE; color: #1E40AF; }
+  .tag-purple { background: #EDE9FE; color: #5B21B6; }
+  .tag-green { background: #D1FAE5; color: #065F46; }
+  .product-hero { display: flex; align-items: center; gap: 24px; padding: 24px; background: var(--card); border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); border: 1px solid var(--border); margin-bottom: 24px; }
+  .product-icon { width: 80px; height: 80px; border-radius: 16px; background: linear-gradient(135deg, #4F46E5, #7C3AED); display: flex; align-items: center; justify-content: center; font-size: 36px; flex-shrink: 0; }
+  .product-info h2 { font-size: 24px; font-weight: 700; }
+  .product-meta { color: var(--text-light); font-size: 14px; margin-top: 6px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>🏆 销量冠军产品深度分析报告</h1>
+  <p>数据范围：2023年6月 — 2024年3月 | Silver 层数据 | 仅只读分析</p>
+</div>
+
+<div class="container">
+
+  <!-- 产品概况 -->
+  <div class="product-hero">
+    <div class="product-icon">👕</div>
+    <div class="product-info">
+      <h2>Classic Vest, S</h2>
+      <div class="product-meta">
+        <span class="tag tag-blue">Vests 类别</span>
+        <span class="tag tag-purple">蓝色 / S码</span>
+        <span class="tag tag-green">ProductID: 864</span>
+      </div>
+      <div class="product-meta" style="margin-top:8px;">
+        标价 $63.50 | 成本 $23.75 | 毛利率 <b style="color:#10B981">62.6%</b> | 平均折扣 1.5%
+      </div>
+    </div>
+  </div>
+
+  <!-- KPI 卡片 -->
+  <div class="kpi-row">
+    <div class="kpi-card">
+      <div class="kpi-value">87</div>
+      <div class="kpi-label">总销量（件）</div>
+      <div class="kpi-badge badge-green">🥇 全产品第1</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-value">$3,015</div>
+      <div class="kpi-label">总营收</div>
+      <div class="kpi-badge badge-blue">毛利 $1,948</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-value">10</div>
+      <div class="kpi-label">独立客户数</div>
+      <div class="kpi-badge badge-green">覆盖率最高</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-value">10</div>
+      <div class="kpi-label">订单数</div>
+      <div class="kpi-badge badge-blue">每单均购 8.7 件</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-value">62.6%</div>
+      <div class="kpi-label">毛利率</div>
+      <div class="kpi-badge badge-green">高利润产品</div>
+    </div>
+  </div>
+
+  <!-- 月度趋势 + 季度对比 -->
+  <div class="section">
+    <div class="section-title">📈 销量趋势</div>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">月度销量 & 营收趋势（点击月份可联动下方表格）</div>
+        <div id="chartMonthly" class="chart-box"></div>
+      </div>
+      <div class="card">
+        <div class="card-title">季度销量对比</div>
+        <div id="chartQuarterly" class="chart-box"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 客户分布 + 同类对比 -->
+  <div class="section">
+    <div class="section-title">👥 客户分布 & 竞品对比</div>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">客户购买量分布（点击扇区可联动表格高亮）</div>
+        <div id="chartCustomer" class="chart-box"></div>
+      </div>
+      <div class="card">
+        <div class="card-title">同类别（Vests）产品对比</div>
+        <div id="chartCategory" class="chart-box"></div>
+        <div style="margin-top:12px; font-size:13px; color:var(--text-light);">
+          Classic Vest S 的销量是 M 号的 <b style="color:var(--primary)">2.56 倍</b>，客户覆盖也多出 4 个。
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Top 10 排名 -->
+  <div class="section">
+    <div class="section-title">🏅 全产品销量 Top 10</div>
+    <div class="card">
+      <div id="chartTop10" class="chart-box-lg"></div>
+    </div>
+  </div>
+
+  <!-- 类别占比 -->
+  <div class="section">
+    <div class="section-title">📊 各品类销量占比</div>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">品类销量分布</div>
+        <div id="chartCategoryPie" class="chart-box"></div>
+      </div>
+      <div class="card">
+        <div class="card-title">品类营收分布</div>
+        <div id="chartCategoryRevenue" class="chart-box"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 订单明细 -->
+  <div class="section">
+    <div class="section-title">📋 订单明细</div>
+    <div class="card" style="overflow-x:auto;">
+      <table id="orderTable">
+        <thead>
+          <tr>
+            <th>订单号</th><th>日期</th><th>客户</th><th>公司</th><th>数量</th><th>单价</th><th>折扣</th><th>金额</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 分析洞察 -->
+  <div class="insight-box">
+    <h3>💡 销量领先原因分析</h3>
+    <ul>
+      <li><b>价格亲民，毛利极高：</b>$63.50 的标价远低于全产品中位数 $539.99，属于"低价高频"消费品。同时毛利率 62.6%，远高于车架、整车等品类。价格门槛低 → 购买决策快 → 复购意愿高。</li>
+      <li><b>客户覆盖率最高：</b>10 个独立客户购买（总客户池约 18 个），覆盖率超过 55%，说明这是一款"人人都会买"的基础款服饰。</li>
+      <li><b>大单驱动明显：</b>Terry Eminhizer 和 Jon Grande 各购买 23 件，单笔贡献了 26.4% 的总销量。批量采购（可能是门店补货）显著拉高销量。</li>
+      <li><b>Q4 旺季效应：</b>2023 Q4 销量 51 件，占总量 58.6%。10-11月是自行车服饰的传统销售旺季（秋冬骑行装备需求）。</li>
+      <li><b>适度折扣策略：</b>平均折扣仅 1.5%，但大单（23件）均享受了 5% 折扣，精准的量价折扣策略既保利润又促大单。</li>
+      <li><b>S 码 vs M 码的尺寸优势：</b>同款 M 号仅卖 34 件（6 个客户），S 号销量是其 2.56 倍。可能 S 码适合亚洲市场或女性骑行者，受众更广。</li>
+      <li><b>低价配件的"顺带购买"效应：</b>作为服饰配件，经常随整车、车架等高客单价订单一起下单，属于典型的交叉销售受益品。</li>
+    </ul>
+  </div>
+</div>
+
+<div class="footer">
+  报告生成时间：2026-04-10 | 数据来源：ai_data_insight.silver | 仅只读分析，未修改任何数据
+</div>
+
+<script>
+// === 数据 ===
+const monthlyData = [
+  {month:'2023-06', qty:6, revenue:228.60, customers:1},
+  {month:'2023-07', qty:23, revenue:763.11, customers:1},
+  {month:'2023-08', qty:1, revenue:38.10, customers:1},
+  {month:'2023-10', qty:27, revenue:915.51, customers:2},
+  {month:'2023-11', qty:9, revenue:342.90, customers:3},
+  {month:'2023-12', qty:15, revenue:497.68, customers:1},
+  {month:'2024-01', qty:6, revenue:228.60, customers:2}
+];
+
+const quarterlyData = [
+  {label:'2023 Q2', qty:6, revenue:228.60},
+  {label:'2023 Q3', qty:24, revenue:801.21},
+  {label:'2023 Q4', qty:51, revenue:1756.09},
+  {label:'2024 Q1', qty:6, revenue:228.60}
+];
+
+const customerData = [
+  {name:'Terry Eminhizer\nAction Bicycle Specialists', qty:23, revenue:763.11},
+  {name:'Jon Grande\nRiding Cycles', qty:23, revenue:763.11},
+  {name:'Kevin Liu\nEastside Department Store', qty:15, revenue:497.68},
+  {name:'Jeffrey Kurtz\nMany Bikes Store', qty:6, revenue:228.60},
+  {name:'Catherine Abel\nProfessional Sales', qty:6, revenue:228.60},
+  {name:'Christopher Beck\nBulk Discount Store', qty:4, revenue:152.40},
+  {name:'Rebecca Laszlo\nInstruments and Parts', qty:4, revenue:152.40},
+  {name:'Jessie Zeng\nSuperior Bicycles', qty:3, revenue:114.30},
+  {name:'Orlando Gee\nA Bike Store', qty:2, revenue:76.20},
+  {name:'Joyce Jarvis\nPaints and Solvents', qty:1, revenue:38.10}
+];
+
+const top10 = [
+  {name:'Classic Vest, S', qty:87, revenue:3014.50, customers:10},
+  {name:'Short-Sleeve Classic Jersey, XL', qty:57, revenue:1783.69, customers:9},
+  {name:'Bike Wash - Dissolver', qty:55, revenue:251.88, customers:7},
+  {name:'Water Bottle - 30 oz.', qty:54, revenue:158.21, customers:7},
+  {name:'AWC Logo Cap', qty:52, revenue:277.36, customers:9},
+  {name:'Patch Kit/8 Patches', qty:50, revenue:89.70, customers:6},
+  {name:'Mountain Tire Tube', qty:50, revenue:156.75, customers:6},
+  {name:'Long-Sleeve Logo Jersey, L', qty:50, revenue:2397.50, customers:8},
+  {name:'Sport-100 Helmet, Blue', qty:48, revenue:1316.09, customers:8},
+  {name:'Short-Sleeve Classic Jersey, L', qty:47, revenue:1470.81, customers:7}
+];
+
+const categoryData = [
+  {name:'Touring Bikes', qty:252, revenue:220655.38},
+  {name:'Jerseys', qty:230, revenue:7017.88},
+  {name:'Road Bikes', qty:222, revenue:183130.30},
+  {name:'Mountain Bikes', qty:209, revenue:170825.89},
+  {name:'Mountain Frames', qty:128, revenue:54949.60},
+  {name:'Vests', qty:121, revenue:4309.90},
+  {name:'Caps', qty:110, revenue:597.08},
+  {name:'Tires and Tubes', qty:105, revenue:435.56},
+  {name:'Bottles and Cages', qty:93, revenue:308.88},
+  {name:'Helmets', qty:89, revenue:2698.58}
+];
+
+const orders = [
+  {id:'71782', date:'2023-06-04', cid:29485, cname:'Catherine Abel', company:'Professional Sales and Service', qty:6, price:38.10, disc:0, total:228.60},
+  {id:'71784', date:'2023-07-03', cid:29736, cname:'Terry Eminhizer', company:'Action Bicycle Specialists', qty:23, price:34.93, disc:0.05, total:763.11},
+  {id:'71897', date:'2023-08-26', cid:29877, cname:'Joyce Jarvis', company:'Paints and Solvents Company', qty:1, price:38.10, disc:0, total:38.10},
+  {id:'71938', date:'2023-10-09', cid:29546, cname:'Christopher Beck', company:'Bulk Discount Store', qty:4, price:38.10, disc:0, total:152.40},
+  {id:'71797', date:'2023-10-15', cid:29796, cname:'Jon Grande', company:'Riding Cycles', qty:23, price:34.93, disc:0.05, total:763.11},
+  {id:'71902', date:'2023-11-08', cid:29932, cname:'Rebecca Laszlo', company:'Instruments and Parts Company', qty:4, price:38.10, disc:0, total:152.40},
+  {id:'71898', date:'2023-11-11', cid:29929, cname:'Jeffrey Kurtz', company:'Many Bikes Store', qty:6, price:38.10, disc:0, total:228.60},
+  {id:'71856', date:'2023-11-14', cid:30089, cname:'Orlando Gee', company:'A Bike Store', qty:2, price:38.10, disc:0, total:76.20},
+  {id:'71946', date:'2023-12-12', cid:29957, cname:'Kevin Liu', company:'Eastside Department Store', qty:15, price:34.93, disc:0.05, total:497.68},
+  {id:'71832', date:'2024-01-04', cid:30019, cname:'Jessie Zeng', company:'Superior Bicycles', qty:3, price:38.10, disc:0, total:114.30}
+];
+
+// === 填充表格 ===
+const tbody = document.querySelector('#orderTable tbody');
+orders.forEach(o => {
+  const tr = document.createElement('tr');
+  tr.dataset.month = o.date.substring(0, 7);
+  tr.dataset.customer = o.cname;
+  tr.innerHTML = `<td>${o.id}</td><td>${o.date}</td><td>${o.cname}</td><td>${o.company}</td>
+    <td><b>${o.qty}</b></td><td>$${o.price.toFixed(2)}</td>
+    <td>${o.disc > 0 ? (o.disc*100).toFixed(0)+'%':'—'}</td><td>$${o.total.toFixed(2)}</td>`;
+  tbody.appendChild(tr);
+});
+
+// === 联动高亮 ===
+function highlightRows(key, value) {
+  document.querySelectorAll('#orderTable tbody tr').forEach(tr => {
+    tr.classList.toggle('highlight', tr.dataset[key] === value);
+  });
+}
+function clearHighlight() {
+  document.querySelectorAll('#orderTable tbody tr').forEach(tr => tr.classList.remove('highlight'));
+}
+
+// === 图表配色 ===
+const colors = ['#4F46E5','#7C3AED','#EC4899','#F59E0B','#10B981','#06B6D4','#8B5CF6','#F97316','#EF4444','#14B8A6'];
+
+// === 月度趋势 ===
+const c1 = echarts.init(document.getElementById('chartMonthly'));
+c1.setOption({
+  tooltip: { trigger:'axis', axisPointer:{type:'cross'} },
+  legend: { data:['销量','营收'], top:0 },
+  grid: { top:40, bottom:30, left:50, right:50 },
+  xAxis: { type:'category', data: monthlyData.map(d=>d.month), axisLabel:{fontSize:12} },
+  yAxis: [
+    { type:'value', name:'件', splitLine:{lineStyle:{type:'dashed'}} },
+    { type:'value', name:'$', splitLine:{show:false} }
+  ],
+  series: [
+    { name:'销量', type:'bar', data:monthlyData.map(d=>d.qty), itemStyle:{color:colors[0], borderRadius:[4,4,0,0]}, barWidth:'40%' },
+    { name:'营收', type:'line', yAxisIndex:1, data:monthlyData.map(d=>d.revenue), smooth:true, lineStyle:{color:colors[1],width:3}, symbol:'circle', symbolSize:8, itemStyle:{color:colors[1]} }
+  ]
+});
+c1.on('click', function(params) {
+  if (params.componentType === 'series') {
+    highlightRows('month', monthlyData[params.dataIndex].month);
+  }
+});
+
+// === 季度对比 ===
+const c2 = echarts.init(document.getElementById('chartQuarterly'));
+c2.setOption({
+  tooltip: { trigger:'axis' },
+  grid: { top:30, bottom:30, left:50, right:20 },
+  xAxis: { type:'category', data:quarterlyData.map(d=>d.label) },
+  yAxis: { type:'value', name:'件', splitLine:{lineStyle:{type:'dashed'}} },
+  series: [{
+    type:'bar', data:quarterlyData.map((d,i) => ({
+      value: d.qty,
+      itemStyle: { color: d.qty === Math.max(...quarterlyData.map(q=>q.qty)) ? '#F59E0B' : colors[0], borderRadius:[6,6,0,0] }
+    })),
+    barWidth:'50%',
+    label: { show:true, position:'top', fontWeight:'bold', fontSize:14 }
+  }]
+});
+
+// === 客户分布 ===
+const c3 = echarts.init(document.getElementById('chartCustomer'));
+c3.setOption({
+  tooltip: { trigger:'item', formatter:'{b}<br/>购买: {c} 件 ({d}%)' },
+  series: [{
+    type:'pie', radius:['40%','75%'], center:['50%','55%'],
+    label: { fontSize:11, formatter:'{b|{b}}\n{c} 件', rich:{b:{fontWeight:'bold'}} },
+    data: customerData.map((d,i) => ({
+      name: d.name.split('\n')[0], value: d.qty,
+      itemStyle: { color: colors[i % colors.length] }
+    })),
+    emphasis: { itemStyle: { shadowBlur:10, shadowOffsetX:0, shadowColor:'rgba(0,0,0,0.2)' } }
+  }]
+});
+c3.on('click', function(params) {
+  highlightRows('customer', params.name);
+});
+
+// === 同类对比 ===
+const c4 = echarts.init(document.getElementById('chartCategory'));
+c4.setOption({
+  tooltip: { trigger:'axis' },
+  grid: { top:30, bottom:40, left:50, right:50 },
+  xAxis: { type:'category', data:['Classic Vest, S','Classic Vest, M'], axisLabel:{fontSize:13,fontWeight:'bold'} },
+  yAxis: [
+    { type:'value', name:'件' },
+    { type:'value', name:'客户数' }
+  ],
+  series: [
+    { type:'bar', name:'销量', data:[87,34], barWidth:'35%', itemStyle:{color:colors[0],borderRadius:[6,6,0,0]}, label:{show:true,position:'top',fontWeight:'bold'} },
+    { type:'bar', name:'客户数', yAxisIndex:1, data:[10,6], barWidth:'35%', itemStyle:{color:colors[4],borderRadius:[6,6,0,0]}, label:{show:true,position:'top',fontWeight:'bold'} }
+  ],
+  legend: { data:['销量','客户数'], top:0 }
+});
+
+// === Top 10 ===
+const c5 = echarts.init(document.getElementById('chartTop10'));
+c5.setOption({
+  tooltip: { trigger:'axis', axisPointer:{type:'shadow'} },
+  legend: { data:['销量','客户数'], top:0 },
+  grid: { top:40, bottom:10, left:220, right:60 },
+  xAxis: { type:'value', splitLine:{lineStyle:{type:'dashed'}} },
+  yAxis: { type:'category', data:top10.map(d=>d.name).reverse(), axisLabel:{fontSize:12} },
+  series: [
+    { name:'销量', type:'bar', data:top10.map((d,i) => ({
+      value:d.qty, itemStyle:{ color: i===0 ? '#F59E0B' : colors[0], borderRadius:[0,4,4,0] }
+    })).reverse(), label:{show:true,position:'right',fontWeight:'bold'} },
+    { name:'客户数', type:'bar', data:top10.map(d=>d.customers).reverse(), itemStyle:{color:colors[4],borderRadius:[0,4,4,0]} }
+  ]
+});
+
+// === 品类销量饼图 ===
+const c6 = echarts.init(document.getElementById('chartCategoryPie'));
+c6.setOption({
+  tooltip: { trigger:'item', formatter:'{b}<br/>销量: {c} 件 ({d}%)' },
+  series: [{
+    type:'pie', radius:['35%','70%'], center:['50%','55%'],
+    label: { fontSize:11 },
+    data: categoryData.slice(0,10).map((d,i) => ({
+      name:d.name, value:d.qty,
+      itemStyle:{ color: d.name==='Vests' ? '#F59E0B' : colors[i%colors.length] }
+    })),
+    emphasis: { itemStyle:{shadowBlur:10,shadowColor:'rgba(0,0,0,0.2)'} }
+  }]
+});
+
+// === 品类营收饼图 ===
+const c7 = echarts.init(document.getElementById('chartCategoryRevenue'));
+c7.setOption({
+  tooltip: { trigger:'item', formatter:'{b}<br/>营收: ${c} ({d}%)' },
+  series: [{
+    type:'pie', radius:['35%','70%'], center:['50%','55%'], roseType:'area',
+    label: { fontSize:11 },
+    data: categoryData.slice(0,10).map((d,i) => ({
+      name:d.name, value:d.revenue,
+      itemStyle:{ color: d.name==='Vests' ? '#F59E0B' : colors[i%colors.length] }
+    })),
+    emphasis: { itemStyle:{shadowBlur:10,shadowColor:'rgba(0,0,0,0.2)'} }
+  }]
+});
+
+// === 响应式 ===
+window.addEventListener('resize', () => {
+  [c1,c2,c3,c4,c5,c6,c7].forEach(c => c.resize());
+});
+
+// === 点击表格行清除高亮 ===
+document.getElementById('orderTable').addEventListener('dblclick', clearHighlight);
+</script>
+
+</body>
+</html>

@@ -1,0 +1,7 @@
+[
+  {"CustomerID": 29485, "AddressID": 1086, "AddressType": "Main Office"},
+  {"CustomerID": 29847, "AddressID": 1092, "AddressType": "Main Office"},
+  {"CustomerID": 29957, "AddressID": 992,  "AddressType": "Main Office"},
+  {"CustomerID": 30072, "AddressID": 640,  "AddressType": "Main Office"},
+  {"CustomerID": 30113, "AddressID": 653,  "AddressType": "Main Office"}
+]

@@ -1,0 +1,7 @@
+[
+  {"AddressID": 640,  "AddressLine1": "740 Main St",       "AddressLine2": "Suite 140", "City": "Chicago",  "StateProvince": "IL", "CountryRegion": "United States", "PostalCode": "60601"},
+  {"AddressID": 653,  "AddressLine1": "753 Elm Blvd",      "AddressLine2": null,        "City": "Dallas",   "StateProvince": "TX", "CountryRegion": "United States", "PostalCode": "75201"},
+  {"AddressID": 992,  "AddressLine1": "1092 Pine Rd",      "AddressLine2": null,        "City": "Portland", "StateProvince": "OR", "CountryRegion": "United States", "PostalCode": "97201"},
+  {"AddressID": 1086, "AddressLine1": "1186 Lake View Dr", "AddressLine2": null,        "City": "Denver",   "StateProvince": "CO", "CountryRegion": "United States", "PostalCode": "80202"},
+  {"AddressID": 1092, "AddressLine1": "1192 Pine Rd",      "AddressLine2": null,        "City": "Boston",   "StateProvince": "MA", "CountryRegion": "United States", "PostalCode": "02108"}
+]

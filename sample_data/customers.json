@@ -1,0 +1,12 @@
+[
+  {"CustomerID": 1,     "Title": "Mr.", "FirstName": "Orlando",   "MiddleName": "N.", "LastName": "Gee",        "Suffix": null,  "CompanyName": "A Bike Store",                  "EmailAddress": "orlando0@adventure-works.com",  "Phone": "245-555-0173"},
+  {"CustomerID": 2,     "Title": "Mr.", "FirstName": "Keith",     "MiddleName": null, "LastName": "Harris",     "Suffix": null,  "CompanyName": "Progressive Sports",            "EmailAddress": "keith0@adventure-works.com",    "Phone": "170-555-0127"},
+  {"CustomerID": 3,     "Title": "Ms.", "FirstName": "Donna",     "MiddleName": "F.", "LastName": "Carreras",   "Suffix": null,  "CompanyName": "Advanced Bike Components",      "EmailAddress": "donna0@adventure-works.com",    "Phone": "279-555-0130"},
+  {"CustomerID": 4,     "Title": "Ms.", "FirstName": "Janet",     "MiddleName": "M.", "LastName": "Gates",      "Suffix": null,  "CompanyName": "Modular Cycle Systems",         "EmailAddress": "janet1@adventure-works.com",    "Phone": "710-555-0173"},
+  {"CustomerID": 5,     "Title": "Mr.", "FirstName": "Lucy",      "MiddleName": null, "LastName": "Harrington", "Suffix": null,  "CompanyName": "Metropolitan Sports Supply",    "EmailAddress": "lucy0@adventure-works.com",     "Phone": "828-555-0186"},
+  {"CustomerID": 29485, "Title": "Ms.", "FirstName": "Catherine", "MiddleName": "R.", "LastName": "Abel",       "Suffix": null,  "CompanyName": "Professional Sales and Service","EmailAddress": "catherine0@adventure-works.com","Phone": "747-555-0171"},
+  {"CustomerID": 29847, "Title": "Mr.", "FirstName": "David",     "MiddleName": null, "LastName": "Hodgson",    "Suffix": null,  "CompanyName": "Good Toys",                     "EmailAddress": "david16@adventure-works.com",   "Phone": "969-555-0117"},
+  {"CustomerID": 29957, "Title": "Mr.", "FirstName": "Kevin",     "MiddleName": null, "LastName": "Liu",        "Suffix": null,  "CompanyName": "Eastside Department Store",     "EmailAddress": "kevin5@adventure-works.com",    "Phone": "926-555-0164"},
+  {"CustomerID": 30072, "Title": "Ms.", "FirstName": "Andrea",    "MiddleName": "A.", "LastName": "Thomsen",    "Suffix": null,  "CompanyName": "West Side Mart",                "EmailAddress": "andrea1@adventure-works.com",   "Phone": "1 (11) 500 555-0120"},
+  {"CustomerID": 30113, "Title": "Mr.", "FirstName": "Raja",      "MiddleName": "D.", "LastName": "Venugopal",  "Suffix": null,  "CompanyName": "Nearby Cycle Shop",             "EmailAddress": "raja0@adventure-works.com",     "Phone": "1 (11) 500 555-0195"}
+]
