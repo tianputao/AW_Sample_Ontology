@@ -1,0 +1,10 @@
+# Local editor settings.
+.vscode/
+
+# Local notebooks and generated reports not intended for this repository.
+flatten_tags_combine_final.ipynb
+ingest_vehicle_test_data.ipynb
+top_product_report.html
+
+# Local reference material.
+ProtegeOWLTutorialP4_v1_3.pdf
