@@ -54,7 +54,7 @@ aw_ontology.owl（4201 条公理）
 业务域：**客户 → 下订单 → 包含明细行 → 引用产品 → 属于类目（递归 4 层）**
 
 表结构信息由于篇幅原因不在文章中展示，有需要可以到Github Repo中查看。
-https://github.com/tianputao/AW_Sample_Ontology/AdventureWorks_Schema.md
+https://github.com/tianputao/AW_Sample_Ontology/blob/main/AdventureWorks_Schema.md
 
 **提示：你可以直接从我的 Github repo 中拿到 Ontology 文件 import 进 Protégé 去熟悉操作和学习，无需自己准备数据源。** 
 
