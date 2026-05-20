@@ -1,4 +1,4 @@
-# Ontology（本体）Part 2：Protégé 构建Ontology实战
+# Ontology（本体）Part 2：Protégé 构建 Ontology 实战
 
 > 此篇为构建Ontology的实战记录，内容含有大量Ontology的概念和名词，如不熟悉请先阅读第一篇 https://mp.weixin.qq.com/s/-SznuaSqg5kq5y-LcPhFwg
 此篇主题是**如何把 Databricks 数仓里的关系型表，转换成一份可推理、可查询、可视化的 OWL 本体（Ontology），并为后续作为 LLM 的语义层做准备**。
